@@ -1,0 +1,30 @@
+{
+  "name": "nwws-oi",
+  "version": "1.0.0",
+  "description": "Allows for realtime parsing of warnings, watches etc.",
+  "main": "index.js",
+  "dependencies": {
+    "@xmpp/client": "0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nwws",
+    "nwwsoi",
+    "nwws-oi",
+    "oi",
+    "national",
+    "weather",
+    "service",
+    "weather",
+    "united",
+    "states",
+    "us",
+    "realtime",
+    "parsing"
+  ],
+  "author": "Matthew Walden",
+  "license": "ISC"
+}
