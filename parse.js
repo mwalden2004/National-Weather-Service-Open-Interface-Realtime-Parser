@@ -128,66 +128,71 @@ module.exports = function (msg, attrs, cb) {
             const time_ending = new Date(yearToday + time_endings_unparsed.substring(0, 2) + "-" + time_endings_unparsed.substring(2, 4) + "-" + time_endings_unparsed.substring(4, 6) + "T" + time_endings_unparsed.substring(7, 9) + ":" + time_endings_unparsed.substring(9, 11) + ":00");
 
             if (Phenomenas[phenomena] && Significances[significance] && Actions[action]) {
-                if (Phenomenas[phenomena] == "Flood") {
+                //Parse the lat_lon_string to get the Lat, and long
+                let sub;
+                if (msg.search("TIME...MOT...LOC") == -1){
+                    sub = msg.search("$$");
+                }else{
+                    sub = msg.search("TIME...MOT...LOC");
+                }
+                let latlong_string = msg.substring(msg.search("LAT...LON"), sub).toString();
+                latlong_string=latlong_string.replace("LAT...LON ", '').replace("$$", '');
+                let latlong_array = latlong_string.split(" ")
 
-                } else {
-                    //Parse the lat_lon_string to get the Lat, and long
-                    const latlong_string = msg.substring(msg.search("LAT...LON"), msg.search("TIME...MOT...LOC") || msg.search("$$")).replace(/\n$/, '').replace("LAT...LON ", '');
-                    let latlong_array = latlong_string.split(" ");
-                    let manArray = [];
-                    //Remove any thing that is null, or a blank string
-                    for (let i = 0; i <= latlong_array.length; i++) {
-                        if (latlong_array[i] == "" || latlong_array[i] == null) {
+                let manArray = [];
+                //Remove any thing that is null, or a blank string
+                for (let i = 0; i <= latlong_array.length; i++) {
+                    if (latlong_array[i] == "" || latlong_array[i] == null) {
 
-                        } else {
-                            manArray.push(latlong_array[i].replace("\n", '').replace('\n', ''))//GET EVERYTHIG WITHOUT NULL OR BLANK STRINGS
-                        }
-                    }
-
-                    let polygon = [];
-                    let issecond = false;
-                    for (let i = 0; i <= manArray.length; i++) {//Iliterate through an array, by only getting the 2nd items within it.
-                        if (issecond == true) {
-                            let fork = i; fork--;
-                            let lat = manArray[i];
-                            let long = manArray[fork];
-                            lat = lat.substring(0, 2) + "." + lat.substring(2, 4);
-                            long = long.substring(0, 2) + "." + long.substring(2, 4);
-                            polygon.push([-lat, long]);//PUSH -LAT ,LONG
-                        }
-                        issecond = !issecond;//GET THE 2ND, THIS WAY YOU ARE GETTING 0, 2, 4, 6, 8, 10 [BECAUSE WARNIGNS ARE LAT, LONG, NOT [LAT, LONG]]
-                        if (i == manArray.length) {//Finished getting polygon
-                            polygon.push(polygon[0])
-                            const newpolygon = {
-                                coords: polygon,
-                                color: '#FF0000',
-                                width: 3
-                            };
-
-                            //Finished the polygon, you can now dessimate.
-
-                            return {
-                                phenomena: Phenomenas[phenomena],
-                                significance: Significances[significance],
-                                action: Actions[action],
-                                start: time_begging,
-                                end: time_ending,
-                                polygon: polygon,
-                                back_data: {
-                                    office_id: office_id,
-                                    productclass: productclass,
-                                    event_tracking: event_tracking,
-                                    phenomena: phenomena,
-                                    significance: significance,
-                                    action: action,
-                                    raw_attrs: attrs,
-                                    raw_msg: msg
-                                }
-                            }
-                        }
-
+                    } else {
+                        manArray.push(latlong_array[i].replace("\n", '').replace('\n', ''))//GET EVERYTHIG WITHOUT NULL OR BLANK STRINGS
                     }
                 }
+
+                let polygon = [];
+                let issecond = false;
+                for (let i = 0; i <= manArray.length; i++) {//Iliterate through an array, by only getting the 2nd items within it.
+                    if (issecond == true) {
+                        let fork = i; fork--;
+                        let lat = manArray[i];
+                        let long = manArray[fork];
+                        lat = lat.substring(0, 2) + "." + lat.substring(2, 4);
+                        long = long.substring(0, 2) + "." + long.substring(2, 4);
+                        polygon.push([-lat, long]);//PUSH -LAT ,LONG
+                    }
+                    issecond = !issecond;//GET THE 2ND, THIS WAY YOU ARE GETTING 0, 2, 4, 6, 8, 10 [BECAUSE WARNIGNS ARE LAT, LONG, NOT [LAT, LONG]]
+                    if (i == manArray.length) {//Finished getting polygon
+                        polygon.push(polygon[0])
+                        const newpolygon = {
+                            coords: polygon,
+                            color: '#FF0000',
+                            width: 3
+                        };
+
+                        //Finished the polygon, you can now dessimate.
+
+                        return {
+                            phenomena: Phenomenas[phenomena],
+                            significance: Significances[significance],
+                            action: Actions[action],
+                            start: time_begging,
+                            end: time_ending,
+                            polygon: polygon,
+                            back_data: {
+                                office_id: office_id,
+                                productclass: productclass,
+                                event_tracking: event_tracking,
+                                phenomena: phenomena,
+                                significance: significance,
+                                action: action,
+                                raw_attrs: attrs,
+                                raw_msg: msg
+                            }
+                        }
+                    }
+
+                }
+
 
             } else {
                 console.log("UNKOWN PHENNOMENAS: " + phenomena)
