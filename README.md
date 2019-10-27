@@ -61,7 +61,7 @@ if (config.testing) {
 
 I would highly recommend checking out my code on [our GitHub location here](https://github.com/mwalden2004/National-Weather-Service-Open-Interface-Realtime-Parser), and helping make it better! If you have an issue, feel free to open an issue there.
 
-## Most Recent Update Info:  VERSION: 1.0.5
+## Most Recent Update Info:  VERSION: 1.0.6
 
 Added new information in returned events
 ```json

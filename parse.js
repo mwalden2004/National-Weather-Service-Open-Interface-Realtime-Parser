@@ -142,14 +142,7 @@ module.exports = function (msg, attrs, cb) {
                 let extra_info = {
 
                 };
-
-                if (msg.search("HAZARD...")){
-                    const startSub = msg.search("HAZARD...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
-                    const endSub = new Number(msg.substring(startSub, msg.length).replace("HAZARD...","        ").indexOf("."))+new Number(msg.substring(0, startSub).length)
-                    let actions = msg.substring(startSub, endSub).replace("HAZARD...", "");
-                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
-                    extra_info["HAZARD"] = actions;
-                }
+                
                 if (msg.search("SOURCE...")){
                     const startSub = msg.search("SOURCE...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
                     const endSub = new Number(msg.substring(startSub, msg.length).replace("SOURCE...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
@@ -159,7 +152,7 @@ module.exports = function (msg, attrs, cb) {
                 }
                 if (msg.search("IMPACT...")){
                     const startSub = msg.search("IMPACT...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
-                    const endSub = new Number(msg.substring(startSub, msg.length).replace("IMPACT...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
+                    const endSub = new Number(msg.substring(startSub, msg.length).replace("IMPACT...","         ").indexOf("*"))+new Number(msg.substring(0, startSub).length)
                     let actions = msg.substring(startSub, endSub).replace("IMPACT...", "");
                     actions=actions.replace(/\n/g, " ").replace(/  /g, "")
                     extra_info["IMPACT"] = actions;
