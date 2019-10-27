@@ -16,8 +16,9 @@ module.exports = function (data) {
                     const awipsid = attrs.awipsid;
                     if (awipsid) {//AWIPS id means it is a valid issued message, but we still need to parse, and do more saftey-checks.
                         try {
-                            const data = MessageParser(msg, attrs);
-                            NWS.emit('event', data);
+                            MessageParser(msg, attrs, function(type, data){
+                                NWS.emit('event', data);
+                            });
                         } catch (err) {
                             console.error("NWWS-OI Parser | Something went wrong parsing: " + err)
                         }
@@ -48,8 +49,9 @@ module.exports = function (data) {
                             const awipsid = attrs.awipsid;
                             if (awipsid) {//AWIPS id means it is a valid issued message, but we still need to parse, and do more saftey-checks.
                                 try {
-                                    const data = MessageParser(msg, attrs);
-                                    NWS.emit('event', data);
+                                    MessageParser(msg, attrs, function(type, data){
+                                        NWS.emit('event', data);
+                                    });
                                 } catch (err) {
                                     console.error("NWWS-OI Parser | Something went wrong parsing: " + err)
                                 }

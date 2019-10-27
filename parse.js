@@ -105,10 +105,9 @@ module.exports = function (msg, attrs, cb) {
         const HVTEC_REGEX = new RegExp('.\....\.....\...\..\.....\.............-............');//Used for hydro flooding.etc data
         const HVTEC_TEXT_REGEX = "/nwsli.s.ic.yymmddThhnnZB.yymmddThhnnZC.yymmddThhnnZE.fr"//Used for hydro flooding.etc data
         const HVTEC = msg.match(PVTEC_REGEX);//Used for tornado warnings, severe storms.etc
-
+        const PDS = msg.includes("...THIS IS A PARTICULARLY DANGEROUS SITUATION...");
         if (PVTEC) {//If a valid PVTEC is found, usssaly used for storm warnings [other than hydro/flodding.etc]
             const data = PVTEC.toString().split(".");
-
             //VTEC-DATA DOC: https://www.weather.gov/media/vtec/VTEC_explanation4-18.pdf
             const productclass = data[0];//Type of product
             const action = data[1];//Is it new, was it existing, or expiring?
@@ -128,6 +127,54 @@ module.exports = function (msg, attrs, cb) {
             const time_ending = new Date(yearToday + time_endings_unparsed.substring(0, 2) + "-" + time_endings_unparsed.substring(2, 4) + "-" + time_endings_unparsed.substring(4, 6) + "T" + time_endings_unparsed.substring(7, 9) + ":" + time_endings_unparsed.substring(9, 11) + ":00");
 
             if (Phenomenas[phenomena] && Significances[significance] && Actions[action]) {
+
+                let CountiesListed = [];//Array where counties will be stored
+                let startCounties = msg.indexOf("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...");//Find the begging of the counties
+                let endCounties = msg.indexOf("* Until ");//End of counties, find the next start
+                let Counties = msg.substring(startCounties, endCounties).replace("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...", "").replace(/          /g, "").split("\n");//Substring for all counties
+                Counties.forEach(county => {//Put all counties into one string.
+                    let pushCounty = county.substring(0, county.search(" County"))+" County";//Get rid of everything but county name/part of county.
+                    if (county !== '' && county !== ' County' && !county.match(/        /g)){//Regex for weird whitespace/tabs.
+                        CountiesListed.push(pushCounty);//Add counties to array
+                    }
+                });
+
+                let extra_info = {
+
+                };
+
+                if (msg.search("HAZARD...")){
+                    const startSub = msg.search("HAZARD...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
+                    const endSub = new Number(msg.substring(startSub, msg.length).replace("HAZARD...","        ").indexOf("."))+new Number(msg.substring(0, startSub).length)
+                    let actions = msg.substring(startSub, endSub).replace("HAZARD...", "");
+                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
+                    extra_info["HAZARD"] = actions;
+                }
+                if (msg.search("SOURCE...")){
+                    const startSub = msg.search("SOURCE...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
+                    const endSub = new Number(msg.substring(startSub, msg.length).replace("SOURCE...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
+                    let actions = msg.substring(startSub, endSub).replace("SOURCE...", "");
+                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
+                    extra_info["SOURCE"] = actions;
+                }
+                if (msg.search("IMPACT...")){
+                    const startSub = msg.search("IMPACT...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
+                    const endSub = new Number(msg.substring(startSub, msg.length).replace("IMPACT...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
+                    let actions = msg.substring(startSub, endSub).replace("IMPACT...", "");
+                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
+                    extra_info["IMPACT"] = actions;
+                }
+                //SOURCE IMPACT
+
+                if (msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...")){//Let's be safe?
+                    const startSub = msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...");
+                    const endSub = msg.search("&&");
+                    let actions = msg.substring(startSub, endSub).replace("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "");
+                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")//formatting
+                    extra_info["ACTIONS"] = actions;//Example: For your protection move to an interior room on the lowest floor of a building.
+                }
+                
+
                 //Parse the lat_lon_string to get the Lat, and long
                 let sub;
                 if (msg.search("TIME...MOT...LOC") == -1){
@@ -171,24 +218,24 @@ module.exports = function (msg, attrs, cb) {
 
                         //Finished the polygon, you can now dessimate.
 
-                        return {
+                        cb("EVENT", {
                             phenomena: Phenomenas[phenomena],
                             significance: Significances[significance],
                             action: Actions[action],
                             start: time_begging,
                             end: time_ending,
                             polygon: polygon,
+                            PDS: PDS,
+                            Counties: CountiesListed,
+                            extras: extra_info,
                             back_data: {
                                 office_id: office_id,
                                 productclass: productclass,
                                 event_tracking: event_tracking,
-                                phenomena: phenomena,
-                                significance: significance,
-                                action: action,
                                 raw_attrs: attrs,
                                 raw_msg: msg
                             }
-                        }
+                        })
                     }
 
                 }
