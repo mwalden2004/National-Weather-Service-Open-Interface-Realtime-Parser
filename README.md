@@ -61,16 +61,16 @@ if (config.testing) {
 
 I would highly recommend checking out my code on [our GitHub location here](https://github.com/mwalden2004/National-Weather-Service-Open-Interface-Realtime-Parser), and helping make it better! If you have an issue, feel free to open an issue there.
 
-## Most Recent Update Info:  VERSION: 1.0.6
+## Most Recent Update Info:  VERSION: 1.0.7
 
 Added new information in returned events
 ```json
-{ phenomena: 'Severe Thunderstorm',
-  significance: 'Warning',
-  action: 'New event',
-  start: 2019-01-20T04:39:00.000Z,
-  end: 2019-01-20T05:15:00.000Z,
-  polygon:
+{ "phenomena": 'Severe Thunderstorm',
+  "significance": 'Warning',
+  "action": 'New event',
+  "start": "2019-01-20T04:39:00.000Z",
+  "end": "2019-01-20T05:15:00.000Z",
+  "polygon":
    [ [ -85.44, '32.39' ],
      [ -85.44, '32.49' ],
      [ -85.45, '32.50' ],
@@ -86,33 +86,34 @@ Added new information in returned events
      [ -85.07, '32.58' ],
      [ -85.01, '32.52' ],
      [ -84.99, '32.49' ],
-     [ -85, '32.46' ],
+     [ -85,    '32.46' ],
      [ -84.97, '32.44' ],
      [ -84.96, '32.42' ],
-     [ -85.44, '32.39' ] ],
-  PDS: false,
-  Counties: [ 'Lee County', 'Northern Russell County' ],
-  extras:
-   { HAZARD: '60 mph wind gust',
-     SOURCE: 'Radar indicated',
-     IMPACT: 'Expect damage to roofs, siding, and trees',
-     ACTIONS:
-      'For your protection move to an interior room on the lowest floor of a building.' },
-  back_data:
-   { office_id: 'KBMX',
-     productclass: 'O',
-     event_tracking: '0001',
-     raw_attrs:
-      { xmlns: 'nwws-oi',
-        cccc: 'KJAN',
-        ttaaii: 'WUUS54',
-        issue: '2019-10-26T14:38:00Z',
-        awipsid: 'SVRJAN',
-        id: '13743.3632' },
-     raw_msg:
+     [ -85.44, '32.39' ] 
+     ],
+  "PDS": false,
+  "Counties": [ 'Lee County', 'Northern Russell County' ],
+  "extras":
+   { "HAZARD": '60 mph wind gust',
+     "SOURCE": 'Radar indicated',
+     "IMPACT": 'Expect damage to roofs, siding, and trees',
+     "ACTIONS": 'For your protection move to an interior room on the lowest floor of a building.' },
+  "back_data": {
+     "office_id": 'KBMX',
+     "productclass": 'O',
+     "event_tracking": '0001',
+     "raw_attrs":
+      { "xmlns": 'nwws-oi',
+        "cccc": 'KJAN',
+        "ttaaii": 'WUUS54',
+        "issue": '2019-10-26T14:38:00Z',
+        "awipsid": 'SVRJAN',
+        "id": '13743.3632' },
+     "raw_msg":
       '950\n        WUUS54 KBMX 192239\n        SVRBMX\n        ALC081-113-192315-\n        /O.NEW.KBMX.SV.W.0001.190119T2239Z-190119T2315Z/\n        \n        BULLETIN - IMMEDIATE BROADCAST REQUESTED\n        Severe Thunderstorm Warning\n        National Weather Service Birmingham AL\n        439 PM CST SAT JAN 19 2019\n        \n        The National Weather Service in Birmingham has issued a\n        \n        * Severe Thunderstorm Warning for...\n          Lee County in east central Alabama...\n          Northern Russell County in southeastern Alabama...\n        \n        * Until 515 PM CST.\n        \n        * At 439 PM CST, severe thunderstorms were located along a line\n          extending from near Beans Mill to Society Hill, moving northeast at\n          45 mph.\n        \n          HAZARD...60 mph wind gusts.\n        \n          SOURCE...Radar indicated.\n        \n          IMPACT...Expect damage to roofs, siding, and trees.\n        \n        * Locations impacted include...\n          Auburn, Phenix City, Opelika, Smiths, Smiths Station, Beulah, Beans\n          Mill, Ladonia, Beauregard, Bleecker, Griffen Mill, Bibb City,\n          Monterey Heights, Ladonia Sports Complex, Marvyn, Phenix Drag Strip\n          and Mount Jefferson.\n        \n        PRECAUTIONARY/PREPAREDNESS ACTIONS...\n        \n        For your protection move to an interior room on the lowest floor of a\n        building.\n        \n        &&\n        \n        A Tornado Watch remains in effect until 900 PM CST for southeastern\n        and east central Alabama.\n        \n        LAT...LON 3239 8544 3249 8544 3250 8545 3273 8538\n              3273 8529 3275 8528 3274 8512 3269 8512\n              3266 8509 3265 8511 3263 8508 3262 8509\n              3258 8507 3252 8501 3249 8499 3246 8500\n              3244 8497 3242 8496\n        TIME...MOT...LOC 2239Z 245DEG 40KT 3272 8530 3244 8543\n        \n        HAIL...<.75IN\n        WIND...60MPH\n        \n        $$\n        \n        89^GSatterwhite' } }
 ```
 Specifically: Counties, Extras, PDS.
+Fixed some parsing issues too. Testing using https://mesonet.agron.iastate.edu/vtec/#2019-O-NEW-KBMX-SV-W-0001/USCOMP-N0Q-201901192235
 
 Layed infunstrucutre to split parsing into seperate files. *as much as i'd love to have a 20k line file*
 

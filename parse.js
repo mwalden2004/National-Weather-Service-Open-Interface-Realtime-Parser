@@ -129,28 +129,28 @@ module.exports = function (msg, attrs, cb) {
             if (Phenomenas[phenomena] && Significances[significance] && Actions[action]) {
 
                 let CountiesListed = [];//Array where counties will be stored
-                let startCounties = msg.indexOf("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...");//Find the begging of the counties
-                let endCounties = msg.indexOf("* Until ");//End of counties, find the next start
-                let Counties = msg.substring(startCounties, endCounties).replace("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...", "").replace(/          /g, "").split("\n");//Substring for all counties
+                let startCounties = msg.toLowerCase().indexOf("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...".toLowerCase());//Find the begging of the counties
+                let endCounties = msg.toLowerCase().indexOf("* until ");//End of counties, find the next start
+                let Counties = msg.substring(startCounties, endCounties).toLowerCase().replace("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...".toLowerCase(), "").replace(/          /g, "").split("\n");//Substring for all counties
                 Counties.forEach(county => {//Put all counties into one string.
-                    let pushCounty = county.substring(0, county.search(" County"))+" County";//Get rid of everything but county name/part of county.
+                    let pushCounty = county.substring(0, county.toLowerCase().search(" county"))+" County";//Get rid of everything but county name/part of county.
                     if (county !== '' && county !== ' County' && !county.match(/        /g)){//Regex for weird whitespace/tabs.
-                        CountiesListed.push(pushCounty);//Add counties to array
+                        CountiesListed.push(pushCounty.toLowerCase());//Add counties to array
                     }
                 });
 
                 let extra_info = {
 
                 };
-                
-                if (msg.search("SOURCE...")){
+
+                if (msg.search("SOURCE...") !== -1){
                     const startSub = msg.search("SOURCE...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
                     const endSub = new Number(msg.substring(startSub, msg.length).replace("SOURCE...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
                     let actions = msg.substring(startSub, endSub).replace("SOURCE...", "");
                     actions=actions.replace(/\n/g, " ").replace(/  /g, "")
                     extra_info["SOURCE"] = actions;
                 }
-                if (msg.search("IMPACT...")){
+                if (msg.search("IMPACT...") !== -1){
                     const startSub = msg.search("IMPACT...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
                     const endSub = new Number(msg.substring(startSub, msg.length).replace("IMPACT...","         ").indexOf("*"))+new Number(msg.substring(0, startSub).length)
                     let actions = msg.substring(startSub, endSub).replace("IMPACT...", "");
@@ -159,7 +159,7 @@ module.exports = function (msg, attrs, cb) {
                 }
                 //SOURCE IMPACT
 
-                if (msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...")){//Let's be safe?
+                if (msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...") !== -1){//Let's be safe?
                     const startSub = msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...");
                     const endSub = msg.search("&&");
                     let actions = msg.substring(startSub, endSub).replace("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "");
