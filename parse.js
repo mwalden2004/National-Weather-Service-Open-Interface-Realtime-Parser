@@ -98,7 +98,7 @@ module.exports = function (msg, attrs, cb) {
         const station = attrs.station;//office it was issued by: example: KBMX is birmingham nws office.
         const issue = attrs.issue;//issued time/date
         //See if the warning contains a valid PVTEC used for anything but hydro/flooding warnings [i think]
-        const PVTEC_REGEX = new RegExp('.\....\.....\...\..\.....\.............-............');//Used for tornado warnings, severe storms.etc
+        const PVTEC_REGEX = new RegExp('/[OTEX]\.(NEW|CON|EXT|EXA|EXB|UPG|CAN|EXP|COR|ROU)\.\w{4}\.[A-Z]{2}\.[WAYSFON]\.\d{4}\.\d{6}T\d{4}Z-\d{6}T\d{4}Z/([^/]*/\w{5}\.[N0-3U]\.[A-Z]{2}\.\d{6}T\d{4}Z\.\d{6}T\d{4}Z\.\d{6}T\d{4}Z\.(NO|NR|UU|OO)/)?');//Used for tornado warnings, severe storms.etc
         const PVTEC_TEXT_REGEX = ": /k.aaa.cccc.pp.s.####.yymmddThhnnZB-yymmddThhnnZE/"//Used for tornado warnings, severe storms.etc
         const PVTEC = msg.match(PVTEC_REGEX);//Used for tornado warnings, severe storms.etc
         //See if it is a valid HVTEC warning, this should be anything hydro/flooding related [i think].
