@@ -34,7 +34,7 @@ module.exports = function (data) {
         } else {
 
 
-            const xmpp = client({ service: 'nwws-oi.weather.gov', domain: 'nwws-oi.weather.gov', username: data.username, password: data.password }).setMaxListeners(0);
+            const xmpp = client({ service: 'xmpp://nwws-oi.weather.gov', domain: 'nwws-oi.weather.gov', username: data.username, password: data.password }).setMaxListeners(0);
 
             xmpp.on('error', err => { console.error('Something went wrong: ', err.toString()) })
 
