@@ -2,6 +2,7 @@ const { client, xml } = require('@xmpp/client');
 const events = require('events'); const NWS = new events.EventEmitter();
 const MessageParser = require("./parse.js");
 
+
 module.exports = function (data) {
     if (data.username && data.password && data.service_name) {
 
