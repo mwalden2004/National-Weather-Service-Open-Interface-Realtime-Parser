@@ -127,109 +127,101 @@ module.exports = function (msg, attrs, cb) {
             const time_ending = new Date(yearToday + time_endings_unparsed.substring(0, 2) + "-" + time_endings_unparsed.substring(2, 4) + "-" + time_endings_unparsed.substring(4, 6) + "T" + time_endings_unparsed.substring(7, 9) + ":" + time_endings_unparsed.substring(9, 11) + ":00");
 
             if (Phenomenas[phenomena] && Significances[significance] && Actions[action]) {
+                let extra_info = {};
+                //Get counties
 
-                //TO-DO REWRITE
                 let CountiesListed = [];//Array where counties will be stored
-                let startCounties = msg.toLowerCase().indexOf("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...".toLowerCase());//Find the begging of the counties
-                let endCounties = msg.toLowerCase().indexOf("* until ");//End of counties, find the next start
-                let Counties = msg.substring(startCounties, endCounties).toLowerCase().replace("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...".toLowerCase(), "").replace(/          /g, "").split("\n");//Substring for all counties
-                Counties.forEach(county => {//Put all counties into one string.
-                    let pushCounty = county.substring(0, county.toLowerCase().search(" county"))+" County";//Get rid of everything but county name/part of county.
-                    if (county !== '' && county !== ' County' && !county.match(/        /g)){//Regex for weird whitespace/tabs.
-                        CountiesListed.push(pushCounty.toLowerCase());//Add counties to array
+                let beggingSub = msg.search(Phenomenas[phenomena]+" "+Significances[significance]+" for...");//Find the begging of the counties
+                let newString = msg.substring(beggingSub, msg.length);//Create a new string to get location information
+                let offset = msg.substring(0, beggingSub).length;let on = 0; let at = 0;//Create an offset of how long the string is.
+                newString.split("\n").find(a => {//go through new lines
+                    at=at+a.length;//add a length of line, used for substr
+                    if (a.search(".+") == -1 ){
+                        on++;//add a new line
+                        if (on == 1){//if you are on the first blank new line
+                            CountiesListed = msg.substring(beggingSub,offset+at).replace(Phenomenas[phenomena]+" "+Significances[significance]+" for...","").split("\r").join(" ").split("\n").join(" ").split("           ").join(" ").split("  ").join("").split("...").join(", ");
+                        }
                     }
                 });
 
-                let extra_info = {
+                //Return information about the warning
 
-                };
-
-                function ParseAndFind(name, arr_value){
+                function ParseAndFind(name, arr_value){//counties uses a modified version of this function, documentation can be found up there
                     if (msg.includes(name)){
                         const beggingSub = msg.search(name);
-                        let newString = msg.substring(beggingSub, msg.length);
-                        let offset = msg.substring(0, beggingSub).length;let on = 0; let at = 0;
+                        const newString = msg.substring(beggingSub, msg.length);
+                        const offset = msg.substring(0, beggingSub).length;let on = 0; let at = 0;
                         newString.split("\n").find(a => {
                             at=at+a.length;
                             if (a.search(".+") == -1 ){
                                 on++;
-                                if (arr_value == "ACTIONS" ? on == 2 : on == 1){
-                                    extra_info[arr_value] = msg.substring(beggingSub,offset+at).replace(name,"").split("\r").join("").replace(name,"").split("\n").join("").split("           ").join(" ");
+                                if (arr_value == "Actions" ? on == 2 : on == 1){
+                                    extra_info[arr_value] = msg.substring(beggingSub,offset+at).replace(name,"").split("           ").join(" ").split("\r").join(" ").split("\n").join("").split("  ").join("");
                                 }
                             }
                         });
                     }
                 }
 
-                ParseAndFind("HAZARD...", "HAZARD");
-                ParseAndFind("SOURCE...", "SOURCE");
-                ParseAndFind("IMPACT...", "IMPACT");
+                ParseAndFind("HAZARD...", "Hazard");
+                ParseAndFind("SOURCE...", "Source");
+                ParseAndFind("IMPACT...", "Impact");
                 ParseAndFind("Locations impacted include...", "LocationsInclude");
-                ParseAndFind("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "ACTIONS");
+                ParseAndFind("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "Actions");
+                
+                if (msg.includes("HAIL...")){
+                    extra_info["Hail"] = msg.substring(msg.search("HAIL...")+"HAIL...".length, msg.substring(msg.search("HAIL..."), msg.length).search("IN")+msg.substring(0, msg.search("HAIL...")).length)+"MPH"
+                }
+                if (msg.includes("WIND...")){
+                    extra_info["Wind"] = msg.substring(msg.search("WIND...")+"HAIL...".length, msg.substring(msg.search("WIND..."), msg.length).search("MPH")+msg.substring(0, msg.search("WIND...")).length)+"MPH"
+                }
+                if (msg.includes("TORNADO...")){
+                    extra_info["Tornado"] = msg.substring(msg.search("TORNADO...")+"TORNADO...".length, msg.substring(msg.search("TORNADO..."), msg.length).search("\r")+msg.substring(0, msg.search("TORNADO...")).length)
+                }
 
-                let sub;
+                //Find Coordinates
+
+                let PolygonCoordinates = [];
+                const begin = msg.search("LAT...LON "); let end;
                 if (msg.search("TIME...MOT...LOC") == -1){
-                    sub = msg.search("$$");
+                    end = msg.search("$$");
                 }else{
-                    sub = msg.search("TIME...MOT...LOC");
+                    end = msg.search("TIME...MOT...LOC");
                 }
-                let latlong_string = msg.substring(msg.search("LAT...LON"), sub).toString();
-                latlong_string=latlong_string.replace("LAT...LON ", '').replace("$$", '');
-                let latlong_array = latlong_string.split(" ")
+                const parsing = msg.substring(begin, end).replace("LAT...LON ", "").split("      ").join("").split("\r").join(" ").split("\n").join(" ").split("  ").join(" ");//i hate these stupid split joins
+                const parsing_arr = parsing.split(" ").slice(0, parsing.split(" ").length-1);
 
-                let manArray = [];
-                //Remove any thing that is null, or a blank string
-                for (let i = 0; i <= latlong_array.length; i++) {
-                    if (latlong_array[i] == "" || latlong_array[i] == null) {
-
-                    } else {
-                        manArray.push(latlong_array[i].replace("\n", '').replace('\n', ''))//GET EVERYTHIG WITHOUT NULL OR BLANK STRINGS
-                    }
+                for (let i = 0; i < parsing_arr.length; i=i+2){
+                    let lat = parsing_arr[i];
+                    let long = parsing_arr[i+1];
+                    lat=lat.substring(0,2)+"."+lat.substring(2,4);
+                    long=long.substring(0,2)+"."+long.substring(2,4);
+                    PolygonCoordinates.push({
+                        lat: lat,
+                        long: long
+                    })
                 }
+                
+                //Send event to client.
 
-                let polygon = [];
-                let issecond = false;
-                for (let i = 0; i <= manArray.length; i++) {//Iliterate through an array, by only getting the 2nd items within it.
-                    if (issecond == true) {
-                        let fork = i; fork--;
-                        let lat = manArray[i];
-                        let long = manArray[fork];
-                        lat = lat.substring(0, 2) + "." + lat.substring(2, 4);
-                        long = long.substring(0, 2) + "." + long.substring(2, 4);
-                        polygon.push([-lat, long]);//PUSH -LAT ,LONG
+                cb("EVENT", {
+                    phenomena: Phenomenas[phenomena],
+                    significance: Significances[significance],
+                    action: Actions[action],
+                    start: time_begging,
+                    end: time_ending,
+                    polygon: PolygonCoordinates,
+                    PDS: PDS,
+                    Counties: CountiesListed,
+                    extras: extra_info,
+                    back_data: {
+                        office_id: office_id,
+                        product_class: productclass,
+                        event_tracking: event_tracking,
+                        raw_attrs: attrs,
+                        raw_msg: msg
                     }
-                    issecond = !issecond;//GET THE 2ND, THIS WAY YOU ARE GETTING 0, 2, 4, 6, 8, 10 [BECAUSE WARNIGNS ARE LAT, LONG, NOT [LAT, LONG]]
-                    if (i == manArray.length) {//Finished getting polygon
-                        polygon.push(polygon[0])
-                        const newpolygon = {
-                            coords: polygon,
-                            color: '#FF0000',
-                            width: 3
-                        };
-
-                        //Finished the polygon, you can now dessimate.
-
-                        cb("EVENT", {
-                            phenomena: Phenomenas[phenomena],
-                            significance: Significances[significance],
-                            action: Actions[action],
-                            start: time_begging,
-                            end: time_ending,
-                            polygon: polygon,
-                            PDS: PDS,
-                            Counties: CountiesListed,
-                            extras: extra_info,
-                            back_data: {
-                                office_id: office_id,
-                                productclass: productclass,
-                                event_tracking: event_tracking,
-                                raw_attrs: attrs,
-                                raw_msg: msg
-                            }
-                        })
-                    }
-
-                }
+                })
 
 
             } else {

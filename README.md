@@ -46,7 +46,7 @@ if (config.testing) {
             "awipsid": "SVRJAN",
             "id": "13743.3632"
         },
-        data: `AWIPS Warning/Watch`})//if you live under a rock, and don't save every warning your receive feel free to use the great text products over at Wikipedia: https://en.wikipedia.org/wiki/Specific_Area_Message_Encoding
+        data: `AWIPS Warning/Watch`})//if you live under a rock, and don't save every warning your receive feel free to use the great text products over at mesonet: https://mesonet.agron.iastate.edu/vtec/#2019-O-NEW-KBMX-SV-W-0001/USCOMP-N0Q-20190119223
 
 } else {//Not testing, I'd reccommend starting down here :)
     nwws.on("unparsed_message_event", function (data) {
@@ -61,58 +61,66 @@ if (config.testing) {
 
 I would highly recommend checking out my code on [our GitHub location here](https://github.com/mwalden2004/National-Weather-Service-Open-Interface-Realtime-Parser), and helping make it better! If you have an issue, feel free to open an issue there.
 
-## Most Recent Update Info:  VERSION: 1.0.7
+## Most Recent Update Info:  VERSION: 1.1.0
 
 Added new information in returned events
 ```json
-{ "phenomena": 'Severe Thunderstorm',
-  "significance": 'Warning',
-  "action": 'New event',
-  "start": "2019-01-20T04:39:00.000Z",
-  "end": "2019-01-20T05:15:00.000Z",
-  "polygon":
-   [ [ -85.44, '32.39' ],
-     [ -85.44, '32.49' ],
-     [ -85.45, '32.50' ],
-     [ -85.38, '32.73' ],
-     [ -85.29, '32.73' ],
-     [ -85.28, '32.75' ],
-     [ -85.12, '32.74' ],
-     [ -85.12, '32.69' ],
-     [ -85.09, '32.66' ],
-     [ -85.11, '32.65' ],
-     [ -85.08, '32.63' ],
-     [ -85.09, '32.62' ],
-     [ -85.07, '32.58' ],
-     [ -85.01, '32.52' ],
-     [ -84.99, '32.49' ],
-     [ -85,    '32.46' ],
-     [ -84.97, '32.44' ],
-     [ -84.96, '32.42' ],
-     [ -85.44, '32.39' ] 
-     ],
-  "PDS": false,
-  "Counties": [ 'Lee County', 'Northern Russell County' ],
-  "extras":
-   { "HAZARD": '60 mph wind gust',
-     "SOURCE": 'Radar indicated',
-     "IMPACT": 'Expect damage to roofs, siding, and trees',
-     "ACTIONS": 'For your protection move to an interior room on the lowest floor of a building.' },
-  "back_data": {
-     "office_id": 'KBMX',
-     "productclass": 'O',
-     "event_tracking": '0001',
-     "raw_attrs":
-      { "xmlns": 'nwws-oi',
-        "cccc": 'KJAN',
-        "ttaaii": 'WUUS54',
-        "issue": '2019-10-26T14:38:00Z',
-        "awipsid": 'SVRJAN',
-        "id": '13743.3632' },
-     "raw_msg":
-      '950\n        WUUS54 KBMX 192239\n        SVRBMX\n        ALC081-113-192315-\n        /O.NEW.KBMX.SV.W.0001.190119T2239Z-190119T2315Z/\n        \n        BULLETIN - IMMEDIATE BROADCAST REQUESTED\n        Severe Thunderstorm Warning\n        National Weather Service Birmingham AL\n        439 PM CST SAT JAN 19 2019\n        \n        The National Weather Service in Birmingham has issued a\n        \n        * Severe Thunderstorm Warning for...\n          Lee County in east central Alabama...\n          Northern Russell County in southeastern Alabama...\n        \n        * Until 515 PM CST.\n        \n        * At 439 PM CST, severe thunderstorms were located along a line\n          extending from near Beans Mill to Society Hill, moving northeast at\n          45 mph.\n        \n          HAZARD...60 mph wind gusts.\n        \n          SOURCE...Radar indicated.\n        \n          IMPACT...Expect damage to roofs, siding, and trees.\n        \n        * Locations impacted include...\n          Auburn, Phenix City, Opelika, Smiths, Smiths Station, Beulah, Beans\n          Mill, Ladonia, Beauregard, Bleecker, Griffen Mill, Bibb City,\n          Monterey Heights, Ladonia Sports Complex, Marvyn, Phenix Drag Strip\n          and Mount Jefferson.\n        \n        PRECAUTIONARY/PREPAREDNESS ACTIONS...\n        \n        For your protection move to an interior room on the lowest floor of a\n        building.\n        \n        &&\n        \n        A Tornado Watch remains in effect until 900 PM CST for southeastern\n        and east central Alabama.\n        \n        LAT...LON 3239 8544 3249 8544 3250 8545 3273 8538\n              3273 8529 3275 8528 3274 8512 3269 8512\n              3266 8509 3265 8511 3263 8508 3262 8509\n              3258 8507 3252 8501 3249 8499 3246 8500\n              3244 8497 3242 8496\n        TIME...MOT...LOC 2239Z 245DEG 40KT 3272 8530 3244 8543\n        \n        HAIL...<.75IN\n        WIND...60MPH\n        \n        $$\n        \n        89^GSatterwhite' } }
+{
+    "phenomena": "Tornado",
+    "significance": "Warning",
+    "action": "New event",
+    "start": "2020-01-11T23:00:00.000Z",
+    "end": "2020-01-11T23:45:00.000Z",
+    "polygon": [
+        {
+            "lat": "32.96",
+            "long": "88.35"
+        },
+        {
+            "lat": "32.99",
+            "long": "88.33"
+        },
+        {
+            "lat": "33.00",
+            "long": "88.13"
+        },
+        {
+            "lat": "32.89",
+            "long": "87.97"
+        },
+        {
+            "lat": "32.66",
+            "long": "88.38"
+        }
+    ],
+    "PDS": false,
+    "Counties": "West central Greene County in west central Alabama, Northwestern Sumter County in west central Alabama, ",
+    "extras": {
+        "Hazard": "Tornado. ",
+        "Source": "Radar indicated rotation. ",
+        "Impact": "Flying debris will be dangerous to those caught withoutshelter. Mobile homes will be damaged or destroyed.Damage to roofs, windows, and vehicles will occur.Treedamage is likely",
+        "LocationsInclude": " Gainesville, Emelle, New West Greene, Panola, West Greene, Geiger, Warsaw and New Mount Hebron.",
+        "Actions": "TAKE COVER NOW! Move to a basement or an interior room on the lowest floor of a sturdy building. Avoid windows. If you are outdoors, in a mobile home, or in a vehicle, move to the closest substantial shelter and protect yourself from flying debr",
+        "Hail": "<.75MPH",
+        "Tornado": "RADAR INDICATED"
+    },
+    "back_data": {
+        "office_id": "KBMX",
+        "product_class": "O",
+        "event_tracking": "0001",
+        "raw_attrs": {
+            "xmlns": "nwws-oi",
+            "cccc": "KBMX",
+            "ttaaii": "WFUS54",
+            "issue": "2019-10-26T14:38:00Z",
+            "awipsid": "SVRBMX",
+            "id": "13743.3632"
+        },
+        "raw_msg": "\u0001\r\n408\r\nWFUS54 KBMX 111700\r\nTORBMX\r\nALC063-119-111745-\r\n/O.NEW.KBMX.TO.W.0001.200111T1700Z-200111T1745Z/\r\n\r\nBULLETIN - EAS ACTIVATION REQUESTED\r\nTornado Warning\r\nNational Weather Service Birmingham AL\r\n1100 AM CST Sat Jan 11 2020\r\n\r\nThe National Weather Service in Birmingham has issued a\r\n\r\n* Tornado Warning for...\r\n  West central Greene County in west central Alabama...\r\n  Northwestern Sumter County in west central Alabama...\r\n\r\n* Until 1145 AM CST.\r\n\r\n* At 1100 AM CST, a severe thunderstorm capable of producing a\r\n  tornado was located near Emelle, or 15 miles northwest of\r\n  Livingston, moving northeast at 60 mph.\r\n\r\n  HAZARD...Tornado.\r\n\r\n  SOURCE...Radar indicated rotation.\r\n\r\n  IMPACT...Flying debris will be dangerous to those caught without\r\n           shelter. Mobile homes will be damaged or destroyed.\r\n           Damage to roofs, windows, and vehicles will occur.  Tree\r\n           damage is likely.\r\n\r\n* Locations impacted include...\r\n  Gainesville, Emelle, New West Greene, Panola, West Greene, Geiger,\r\n  Warsaw and New Mount Hebron.\r\n\r\nPRECAUTIONARY/PREPAREDNESS ACTIONS...\r\n\r\nTAKE COVER NOW! Move to a basement or an interior room on the lowest\r\nfloor of a sturdy building. Avoid windows. If you are outdoors, in a\r\nmobile home, or in a vehicle, move to the closest substantial shelter\r\nand protect yourself from flying debris.\r\n\r\n&&\r\n\r\nLAT...LON 3296 8835 3299 8833 3300 8813 3289 8797\r\n      3266 8838\r\nTIME...MOT...LOC 1700Z 228DEG 54KT 3276 8838\r\n\r\nTORNADO...RADAR INDICATED\r\nHAIL...<.75IN\r\n\r\n$$\r\n\r\n40/Sizemore"
+    }
+}
 ```
-Specifically: Counties, Extras, PDS.
+Added nire extra_info types and totaly rewrote most of the parser to make it more efficent/readable.
 Fixed some parsing issues too. Testing using https://mesonet.agron.iastate.edu/vtec/#2019-O-NEW-KBMX-SV-W-0001/USCOMP-N0Q-201901192235
 
 Layed infunstrucutre to split parsing into seperate files. *as much as i'd love to have a 20k line file*
