@@ -128,6 +128,7 @@ module.exports = function (msg, attrs, cb) {
 
             if (Phenomenas[phenomena] && Significances[significance] && Actions[action]) {
 
+                //TO-DO REWRITE
                 let CountiesListed = [];//Array where counties will be stored
                 let startCounties = msg.toLowerCase().indexOf("* "+Phenomenas[phenomena]+" "+Significances[significance]+" for...".toLowerCase());//Find the begging of the counties
                 let endCounties = msg.toLowerCase().indexOf("* until ");//End of counties, find the next start
@@ -143,32 +144,29 @@ module.exports = function (msg, attrs, cb) {
 
                 };
 
-                if (msg.search("SOURCE...") !== -1){
-                    const startSub = msg.search("SOURCE...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
-                    const endSub = new Number(msg.substring(startSub, msg.length).replace("SOURCE...","         ").indexOf("."))+new Number(msg.substring(0, startSub).length)
-                    let actions = msg.substring(startSub, endSub).replace("SOURCE...", "");
-                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
-                    extra_info["SOURCE"] = actions;
+                function ParseAndFind(name, arr_value){
+                    if (msg.includes(name)){
+                        const beggingSub = msg.search(name);
+                        let newString = msg.substring(beggingSub, msg.length);
+                        let offset = msg.substring(0, beggingSub).length;let on = 0; let at = 0;
+                        newString.split("\n").find(a => {
+                            at=at+a.length;
+                            if (a.search(".+") == -1 ){
+                                on++;
+                                if (arr_value == "ACTIONS" ? on == 2 : on == 1){
+                                    extra_info[arr_value] = msg.substring(beggingSub,offset+at).replace(name,"").split("\r").join("").replace(name,"").split("\n").join("").split("           ").join(" ");
+                                }
+                            }
+                        });
+                    }
                 }
-                if (msg.search("IMPACT...") !== -1){
-                    const startSub = msg.search("IMPACT...");//this is such a forking hack. i approve. [can someone do a good pull, really thinking about dividing warnings/watches into their own parsers.]
-                    const endSub = new Number(msg.substring(startSub, msg.length).replace("IMPACT...","         ").indexOf("*"))+new Number(msg.substring(0, startSub).length)
-                    let actions = msg.substring(startSub, endSub).replace("IMPACT...", "");
-                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")
-                    extra_info["IMPACT"] = actions;
-                }
-                //SOURCE IMPACT
 
-                if (msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...") !== -1){//Let's be safe?
-                    const startSub = msg.search("PRECAUTIONARY/PREPAREDNESS ACTIONS...");
-                    const endSub = msg.search("&&");
-                    let actions = msg.substring(startSub, endSub).replace("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "");
-                    actions=actions.replace(/\n/g, " ").replace(/  /g, "")//formatting
-                    extra_info["ACTIONS"] = actions;//Example: For your protection move to an interior room on the lowest floor of a building.
-                }
-                
+                ParseAndFind("HAZARD...", "HAZARD");
+                ParseAndFind("SOURCE...", "SOURCE");
+                ParseAndFind("IMPACT...", "IMPACT");
+                ParseAndFind("Locations impacted include...", "LocationsInclude");
+                ParseAndFind("PRECAUTIONARY/PREPAREDNESS ACTIONS...", "ACTIONS");
 
-                //Parse the lat_lon_string to get the Lat, and long
                 let sub;
                 if (msg.search("TIME...MOT...LOC") == -1){
                     sub = msg.search("$$");
