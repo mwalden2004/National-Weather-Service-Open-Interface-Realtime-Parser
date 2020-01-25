@@ -1,4 +1,4 @@
-const Phenomenas = {
+const Phenomenas = { // lots of em huh
     AF: "Ashfall(land)",
     AS: "Air Stagnation",
     BH: "Beach Hazard",
