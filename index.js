@@ -50,9 +50,7 @@ class NWWSOI{
                 throw new Error("Must provide username, password, and service_name if you are not testing.")
             }
         }
-    }
 
-    returnListener(){
         return nws_event;
     }
 
