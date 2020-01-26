@@ -12,7 +12,7 @@ class NWWSOI{
 
         }else{
             if (data.username !== null && data.password !== null && data.service_name !== null){
-                xmpp = client({ service: 'xmpp://nwws-oi.weather.gov', domain: 'nwws-oi.weather.gov', username: data.username, password: data.password }).setMaxListeners(0);
+                const xmpp = client({ service: 'xmpp://nwws-oi.weather.gov', domain: 'nwws-oi.weather.gov', username: data.username, password: data.password }).setMaxListeners(0);
                 this.xmpp=xmpp;
 
                 xmpp.on('error', err => { console.error('Something went wrong: ', err.toString()) })
@@ -23,7 +23,7 @@ class NWWSOI{
 
                 xmpp.on('stanza', async stanza => {
                     if (stanza.is('message')) {
-                        const x = stanz.getChild('x');//Get the X stanza, which includes all relevant data.
+                        const x = stanza.getChild('x');//Get the X stanza, which includes all relevant data.
                         if (x) {//Sometimes, it likes to be stupid,so we make sure X is real.
                             if (x.children) {//Get the data of the message
                                 const msg = x.children[0];
@@ -33,10 +33,10 @@ class NWWSOI{
                                     const awipsid = attrs.awipsid;
                                     if (awipsid) {//AWIPS id means it is a valid issued message, but we still need to parse, and do more saftey-checks.
                                         try {
-                                            const msg = new MessageParser(msg, attrs)
-                                            nws_event.emit('event', msg);
+                                            const m_msg = new MessageParser(msg, attrs)
+                                            nws_event.emit('event', m_msg);
                                         } catch (err) {
-                                            throw new Error("NWWS-OI Parser | Something went wrong parsing: " + err)
+                                            throw new Error("Something went wrong parsing: " + err)
                                         }
                                     }
                                 }
@@ -51,6 +51,9 @@ class NWWSOI{
             }
         }
 
+    }
+
+    returnListener(){
         return nws_event;
     }
 

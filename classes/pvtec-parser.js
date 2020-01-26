@@ -3,13 +3,13 @@ const Actions = require("../Defs/Actions");
 const Phenomena = require("../Defs/Phenomena");
 const Significances = require("../Defs/Significances");
 
-class VTECParser{ // https://www.weather.gov/media/vtec/VTEC_explanation4-18.pdf
+class PVTECParser{ // https://www.weather.gov/media/vtec/VTEC_explanation4-18.pdf
     
-    constructor(vtec){
-        const split_vtec = vtec.split(".");
+    constructor(pvtec){
+        const split_vtec = pvtec.split(".");
         const dates = split_vtec[6].split("-");
 
-        this.vtec = {
+        this.pvtec = {
             class: ProductClasses[split_vtec[0]],
             action: Actions[split_vtec[1]],
             office: split_vtec[2],
@@ -32,8 +32,8 @@ class VTECParser{ // https://www.weather.gov/media/vtec/VTEC_explanation4-18.pdf
     }
 
     return(){
-        return this.vtec;
+        return this.pvtec;
     }
 }
 
-module.exports=VTECParser;
+module.exports=PVTECParser;

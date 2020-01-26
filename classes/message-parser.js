@@ -1,5 +1,6 @@
 const Regexs = require("../Defs/Regexs");
-const VTEC_Parser = require("./vtec-parser")
+const PVTEC_Parser = require("./pvtec-parser");
+const HVTEC_Parser = require("./hvtec-parser");
 
 class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenomena=TO&significance=W&etn=20&year=2018#2019-O-NEW-KBMX-TO-W-0003/USCOMP-N0Q-201901191540
     constructor(new_msg, new_attrs){
@@ -8,10 +9,11 @@ class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenom
 
         const msg = unescape(new_msg);
         const attrs = new_attrs;
-        const vtecCheck = msg.match(Regexs.VTEC);
+        const pvtecCheck = msg.match(Regexs.PVTEC);
+        const hvtecCheck = msg.match(Regexs.HVTEC);
 
-        if (vtecCheck){
-            const vtec = new VTEC_Parser(vtecCheck[0]).return();
+        if (pvtecCheck){
+            const vtec = new PVTEC_Parser(pvtecCheck[0]).return();
 
             let extra_info = {};
 
@@ -72,6 +74,11 @@ class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenom
             this.PolygonCoordinates=PolygonCoordinates;
             this.extra_info=extra_info;
             this.vtec=vtec;
+        }
+        
+        if (hvtecCheck){
+            const hvtec = new HVTEC_Parser(hvtecCheck[0]).return();
+            console.log(hvtec)
         }
     }
 
