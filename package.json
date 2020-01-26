@@ -1,0 +1,35 @@
+{
+  "name": "nwws-oi",
+  "version": "2.0.0",
+  "description": "Allows for realtime parsing of warnings, watches etc.",
+  "main": "index.js",
+  "dependencies": {
+    "@xmpp/client": "0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/mwalden2004/National-Weather-Service-Open-Interface-Realtime-Parser/issues",
+    "email": "sloss196@gmail.com"
+  },
+  "repository": "github:mwalden2004/National-Weather-Service-Open-Interface-Realtime-Parser",
+  "keywords": [
+    "nwws",
+    "nwwsoi",
+    "nwws-oi",
+    "oi",
+    "national",
+    "weather",
+    "service",
+    "weather",
+    "united",
+    "states",
+    "us",
+    "realtime",
+    "parsing"
+  ],
+  "author": "Matthew Walden",
+  "license": "ISC"
+}
