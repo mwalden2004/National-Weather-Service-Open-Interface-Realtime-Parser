@@ -1,6 +1,7 @@
 const Regexs = require("../Defs/Regexs");
 const PVTEC_Parser = require("./pvtec-parser");
 const HVTEC_Parser = require("./hvtec-parser");
+const UGC_Parser = require("./UGC-parser");
 
 class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenomena=TO&significance=W&etn=20&year=2018#2019-O-NEW-KBMX-TO-W-0003/USCOMP-N0Q-201901191540
     constructor(new_msg, new_attrs){
@@ -11,9 +12,13 @@ class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenom
         const attrs = new_attrs;
         const pvtecCheck = msg.match(Regexs.PVTEC);
         const hvtecCheck = msg.match(Regexs.HVTEC);
+        const ugcCheck = msg.match(Regexs.UGC);
+
 
         if (pvtecCheck){
             const vtec = new PVTEC_Parser(pvtecCheck[0]).return();
+            const ugc = new UGC_Parser(ugcCheck[0]).return();
+
 
             let extra_info = {};
 
@@ -74,12 +79,17 @@ class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenom
             this.PolygonCoordinates=PolygonCoordinates;
             this.extra_info=extra_info;
             this.vtec=vtec;
+            this.ugc = ugc;
         }
         
         if (hvtecCheck){
             const hvtec = new HVTEC_Parser(hvtecCheck[0]).return();
             console.log(hvtec)
         }
+    }
+
+    getAttrs(){
+        return this.attrs;
     }
 
     getPolygon(){
@@ -94,11 +104,16 @@ class MessageParser { // https://mesonet.agron.iastate.edu/vtec/?wfo=KBMX&phenom
         return this.extra_info;
     }
 
+    getMessage(){
+        return this.msg;
+    }
+
     returnInfo(){
         const toReturn = {
             header: this.vtec || this.pvtec,
             polygon: this.PolygonCoordinates,
             extra_info: this.extra_info,
+            ugc: this.ugc
         }
         return toReturn;
     }
