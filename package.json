@@ -1,6 +1,6 @@
 {
   "name": "nwws-oi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Allows for realtime parsing of warnings, watches etc.",
   "main": "index.js",
   "dependencies": {
