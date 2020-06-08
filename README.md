@@ -1,6 +1,10 @@
 # National Weather Service Open-Interface Realtime Parser
 *long name*
 
+# Important Information
+
+I am no longer maintaing this parser, as I am now maintaing another closed source module, which is much more efficent than this one. This one is not that bad, however, I do reccomend making some changes to this parser, as it occasionly parses messages incorrectly.
+
 # THIS WAS RECENTLY ENTIERLY REWROTE TO BE CLEANER, PLEASE MAKE SURE YOU UPDATE YOUR CODE TO MATCH THE **BREAKING, AND MAJOR** CHANGES! [THIS IS NOT FINISHED, I AM STILL REWRITING]
 
 This package is used to pull real-time information from NWWS-OI, using Node.JS. This package also handles parsing.
