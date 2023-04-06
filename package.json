@@ -4,9 +4,12 @@
   "description": "Allows for realtime parsing of warnings, watches etc.",
   "main": "index.js",
   "dependencies": {
-    "@xmpp/client": "0.8.0"
+    "@xmpp/client": "^0.8.0",
+    "@xmpp/debug": "^0.13.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/events": "^3.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

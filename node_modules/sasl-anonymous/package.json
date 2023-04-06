@@ -1,0 +1,42 @@
+{
+  "name": "sasl-anonymous",
+  "version": "0.1.0",
+  "description": "JavaScript implementation of ANONYMOUS SASL mechanism.",
+  "keywords": ["sasl", "auth", "authn", "authentication", "security"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jaredhanson/js-sasl-anonymous.git"
+  },
+  "bugs": {
+    "url": "http://github.com/jaredhanson/js-sasl-anonymous/issues"
+  },
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "main",
+  "devDependencies": {
+    "express": "3.x.x",
+    "mocha": "1.x.x",
+    "chai": "1.x.x",
+    "mocha-phantomjs": "1.x.x",
+    "mocha-cloud": "0.0.1",
+    "term-canvas": "0.0.5",
+    "mocha-cloud-grid-view": "0.0.1"
+  },
+  "engines": { "node": ">= 0.4.0" },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --reporter spec --require test/node/bootstrap test/*.test.js"
+  },
+  "volo": {
+    "dependencies": {
+    }
+  }
+}
